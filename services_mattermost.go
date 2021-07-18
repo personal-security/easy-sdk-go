@@ -11,8 +11,6 @@ import (
 	"golang.org/x/net/proxy"
 )
 
-const torAddr = "127.0.0.1:9050"
-
 func MattermostSendMessage(url, hook, message string, isCode bool, warning bool) (string, error) {
 	const PROXY_ADDR = torAddr
 	var URL = "http://" + url + "/hooks/" + hook

@@ -13,8 +13,6 @@ import (
 	"golang.org/x/net/proxy"
 )
 
-const torAddr = "127.0.0.1:9050"
-
 // Message show message in request
 func Message(status bool, message string) map[string]interface{} {
 	return map[string]interface{}{"status": status, "message": message}
