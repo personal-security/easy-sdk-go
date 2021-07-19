@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"log"
+	"strconv"
 
 	"golang.org/x/crypto/openpgp"
 	"golang.org/x/crypto/openpgp/armor"
@@ -59,4 +60,63 @@ func EncryptMailMessage(key, body []byte) ([]byte, error) {
 	ct.Close()
 
 	return out.Bytes(), nil
+}
+
+// RC4 Encryption
+
+func EncryptRC4(data []byte, ciph *CipherRC4) []byte {
+	buffer := make([]byte, len(data))
+	ciph.XorKeyStreamGeneric(buffer, data)
+	return buffer
+}
+
+// Copyright 2009 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license
+
+type CipherRC4 struct {
+	s    [256]uint32
+	i, j uint8
+}
+
+type KeySizeError int
+
+func (k KeySizeError) Error() string {
+	return "crypto/rc4: invalid key size " + strconv.Itoa(int(k))
+}
+
+func NewCipherRC4(key []byte) (*CipherRC4, error) {
+	k := len(key)
+	if k < 1 || k > 256 {
+		return nil, KeySizeError(k)
+	}
+	var c CipherRC4
+	for i := 0; i < 256; i++ {
+		c.s[i] = uint32(i)
+	}
+	var j uint8 = 0
+	for i := 0; i < 256; i++ {
+
+		j += uint8(c.s[i]) + key[i%k]
+
+		c.s[i], c.s[j] = c.s[j], c.s[i]
+	}
+	return &c, nil
+}
+
+func (c *CipherRC4) Reset() {
+	for i := range c.s {
+		c.s[i] = 0
+	}
+	c.i, c.j = 0, 0
+}
+
+func (c *CipherRC4) XorKeyStreamGeneric(dst, src []byte) {
+	i, j := c.i, c.j
+	for k, v := range src {
+		i += 1
+		j += uint8(c.s[i])
+		c.s[i], c.s[j] = c.s[j], c.s[i]
+		dst[k] = v ^ uint8(c.s[uint8(c.s[i]+c.s[j])])
+	}
+	c.i, c.j = i, j
 }
