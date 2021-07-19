@@ -66,7 +66,13 @@ func EncryptMailMessage(key, body []byte) ([]byte, error) {
 
 func EncryptRC4(data []byte, ciph *CipherRC4) []byte {
 	buffer := make([]byte, len(data))
-	ciph.XorKeyStreamGeneric(buffer, data)
+	for i, v := range data {
+		buffer[i] = byte(v)
+	}
+
+	ciph.XorKeyStreamGeneric(buffer, buffer) //encrypt the data
+	ciph.Reset()                             //reset since we cant rewind the rc4 state for working on the same dataset
+
 	return buffer
 }
 
