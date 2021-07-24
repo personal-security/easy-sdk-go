@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"crypto/md5"
 	"encoding/hex"
+	"io/ioutil"
 	"log"
 	"strconv"
+	"strings"
 
 	"golang.org/x/crypto/openpgp"
 	"golang.org/x/crypto/openpgp/armor"
@@ -60,6 +62,51 @@ func EncryptMailMessage(key, body []byte) ([]byte, error) {
 	ct.Close()
 
 	return out.Bytes(), nil
+}
+
+// PgpEncryptMessage encrypt message with public pgp key
+func PgpEncryptMessage(key, body []byte) ([]byte, error) {
+	return EncryptMailMessage(key, body)
+}
+
+// PgpDecryptMessage decrypt message with private key (password optional)
+func PgpDecryptMessage(text string, key string, pass string) (string, error) {
+	keyRing := strings.NewReader(key)
+
+	entityList, err := openpgp.ReadArmoredKeyRing(keyRing)
+	if err != nil {
+		log.Fatal(err)
+		return "", err
+	}
+
+	entity := entityList[0]
+	passphraseByte := []byte(pass)
+	err = entity.PrivateKey.Decrypt(passphraseByte)
+	if err != nil {
+		log.Fatal(err)
+		return "", err
+	}
+	for _, subkey := range entity.Subkeys {
+		subkey.PrivateKey.Decrypt(passphraseByte)
+	}
+
+	encryptedContent := strings.NewReader(text)
+
+	md, err := openpgp.ReadMessage(encryptedContent, entityList, nil, nil)
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+
+	bytes, err := ioutil.ReadAll(md.UnverifiedBody)
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+
+	decStr := string(bytes)
+
+	return decStr, nil
 }
 
 // RC4 Encryption
