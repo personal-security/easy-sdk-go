@@ -3,3 +3,5 @@
 A set of simple functions to make life easier. 
 
 Listing functions is dev.
+
+https://pkg.go.dev/github.com/personal-security/easy-sdk-go
