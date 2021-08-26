@@ -2,6 +2,14 @@
 
 A set of simple functions to make life easier. 
 
+## Install
+
+`go get -u "github.com/personal-security/easy-sdk-go"`
+
+## Finctions
+
 Listing functions is dev.
 
-https://pkg.go.dev/github.com/personal-security/easy-sdk-go
+## Links
+
+[pkg.go.dev](https://pkg.go.dev/github.com/personal-security/easy-sdk-go)
