@@ -1,7 +1,6 @@
 package easysdk
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -12,17 +11,6 @@ import (
 
 	"golang.org/x/net/proxy"
 )
-
-// Message show message in request
-func Message(status bool, message string) map[string]interface{} {
-	return map[string]interface{}{"status": status, "message": message}
-}
-
-// Respond add headers to respond
-func Respond(w http.ResponseWriter, data map[string]interface{}) {
-	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(data)
-}
 
 func SendGetTorRequest(url string) ([]byte, error) {
 	const PROXY_ADDR = torAddr
