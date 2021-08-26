@@ -26,6 +26,7 @@ type RespondAnswer struct {
 }
 
 func (respond *RespondAnswer) Create(status bool, message string) {
+	respond.respondAnswer = map[string]interface{}{}
 	respond.respondAnswer[statusField] = status
 	respond.respondAnswer[messageField] = message
 }
