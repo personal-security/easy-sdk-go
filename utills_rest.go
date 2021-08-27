@@ -20,47 +20,101 @@ func Respond(w http.ResponseWriter, data map[string]interface{}) {
 
 var statusField = "status"
 var messageField = "message"
+var payloadField = "payload"
 
-type RespondAnswer struct {
-	respondAnswer map[string]interface{}
+type RespondApi struct {
+	respondHashMap map[string]interface{}
 }
 
-func (respond *RespondAnswer) Create(status bool, message string) {
-	respond.respondAnswer = map[string]interface{}{}
-	respond.respondAnswer[statusField] = status
-	respond.respondAnswer[messageField] = message
-}
-
-// Optional func
-func (respond *RespondAnswer) SetStatus(status bool) {
-	respond.respondAnswer[statusField] = status
+func (respond *RespondApi) Create(status bool, message string) {
+	respond.respondHashMap = map[string]interface{}{}
+	respond.respondHashMap[statusField] = status
+	respond.respondHashMap[messageField] = message
 }
 
 // Optional func
-func (respond *RespondAnswer) SetMessage(message string) {
-	respond.respondAnswer[messageField] = message
+func (respond *RespondApi) SetStatus(status bool) {
+	respond.respondHashMap[statusField] = status
 }
 
-func (respond *RespondAnswer) AddItem(item map[string]interface{}) {
-	respond.respondAnswer["item"] = item
+// Optional func
+func (respond *RespondApi) SetMessage(message string) {
+	respond.respondHashMap[messageField] = message
 }
 
-func (respond *RespondAnswer) AddItems(items map[string]interface{}) {
-	respond.respondAnswer["items"] = items
+// Optional func
+func (respond *RespondApi) SetPayload(data map[string]interface{}) {
+	respond.respondHashMap[payloadField] = data
 }
 
-func (respond *RespondAnswer) AddCustomField(fieldName string, items map[string]interface{}) {
-	if fieldName != "" {
-		respond.respondAnswer[fieldName] = items
+func GenerateApiError(w http.ResponseWriter, message string, data map[string]interface{}) {
+	resp := &RespondApi{}
+	resp.Create(false, message)
+	resp.Respond(w)
+}
+
+func GenerateApiErrorJson(message string, data map[string]interface{}) string {
+	resp := &RespondApi{}
+	resp.Create(false, message)
+	return resp.ReturnJson()
+}
+
+func GenerateApiRespond(w http.ResponseWriter, status bool, message string, data map[string]interface{}) {
+	resp := &RespondApi{}
+	resp.Create(status, message)
+	if data != nil {
+		resp.SetPayload(data)
 	}
+	resp.Respond(w)
 }
 
-func (respond *RespondAnswer) Return() map[string]interface{} {
-	return respond.respondAnswer
+func GenerateApiRespondJson(status bool, message string, data map[string]interface{}) string {
+	resp := &RespondApi{}
+	resp.Create(status, message)
+	if data != nil {
+		resp.SetPayload(data)
+	}
+	return resp.ReturnJson()
+}
+
+// func (respond *RespondApi) SetItem(item map[string]interface{}) {
+// 	payload := map[string]interface{}{}
+// 	payload["item"] = item
+
+// 	respond.respondHashMap[payloadField] = payload
+// }
+
+// func (respond *RespondApi) SetItems(items map[string]interface{}) {
+// 	payload := map[string]interface{}{}
+// 	payload["items"] = items
+
+// 	respond.respondHashMap[payloadField] = payload
+// }
+
+// func (respond *RespondApi) AddCustomField(fieldName string, items map[string]interface{}) {
+// 	if fieldName != "" {
+// 		payload := map[string]interface{}{}
+// 		payload[fieldName] = items
+
+// 		respond.respondHashMap[payloadField] = payload
+// 	}
+// }
+
+func (respond *RespondApi) ReturnHashMap() map[string]interface{} {
+	return respond.respondHashMap
+}
+
+func (respond *RespondApi) ReturnJson() string {
+	json, err := json.Marshal(respond.respondHashMap)
+	if err != nil {
+		//log.Fatal(err)
+		return ""
+	}
+	return string(json)
 }
 
 // Return to browser
-func (respond *RespondAnswer) Respond(w http.ResponseWriter) {
+func (respond *RespondApi) Respond(w http.ResponseWriter) {
 	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(respond.Return())
+	json.NewEncoder(w).Encode(respond.ReturnHashMap())
 }

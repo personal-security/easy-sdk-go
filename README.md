@@ -10,6 +10,48 @@ A set of simple functions to make life easier.
 
 Listing functions is dev.
 
+## Example Rest Answer
+
+```GO
+package controllers
+
+import (
+	"net/http"
+	"rest-api/models"
+
+	"github.com/gorilla/mux"
+	easysdk "github.com/personal-security/easy-sdk-go"
+)
+
+var StatusGetNow = func(w http.ResponseWriter, r *http.Request) {
+    // CODE
+
+	resp := &easysdk.RespondApi{}
+	resp.Create(true, "Success")
+	resp.Respond(w)
+}
+```
+
+or
+
+```GO
+package controllers
+
+import (
+	"net/http"
+	"rest-api/models"
+
+	"github.com/gorilla/mux"
+	easysdk "github.com/personal-security/easy-sdk-go"
+)
+
+var StatusGetNow = func(w http.ResponseWriter, r *http.Request) {
+    // CODE
+
+	easysdk.GenerateApiRespond(w,true,"Success",nil)
+}
+```
+
 ## Links
 
 [pkg.go.dev](https://pkg.go.dev/github.com/personal-security/easy-sdk-go)
