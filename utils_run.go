@@ -11,7 +11,6 @@ func RunCMD(Command string, Home string) (string, error) {
 
 	retData, err := cmd.Output()
 	if err != nil {
-		retData = []byte("")
 		log.Println(err.Error())
 		return "", err
 	}

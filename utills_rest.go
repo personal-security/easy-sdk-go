@@ -24,12 +24,19 @@ var payloadField = "payload"
 
 type RespondApi struct {
 	respondHashMap map[string]interface{}
+	respondCode    int
 }
 
 func (respond *RespondApi) Create(status bool, message string) {
 	respond.respondHashMap = map[string]interface{}{}
 	respond.respondHashMap[statusField] = status
 	respond.respondHashMap[messageField] = message
+	respond.respondCode = http.StatusOK
+}
+
+// Optional func
+func (respond *RespondApi) SetCode(code int) {
+	respond.respondCode = code
 }
 
 // Optional func
@@ -47,9 +54,10 @@ func (respond *RespondApi) SetPayload(data map[string]interface{}) {
 	respond.respondHashMap[payloadField] = data
 }
 
-func GenerateApiError(w http.ResponseWriter, message string, data map[string]interface{}) {
+func GenerateApiError(w http.ResponseWriter, message string, data map[string]interface{}, code int) {
 	resp := &RespondApi{}
 	resp.Create(false, message)
+	resp.SetCode(code)
 	resp.Respond(w)
 }
 
@@ -116,5 +124,6 @@ func (respond *RespondApi) ReturnJson() string {
 // Return to browser
 func (respond *RespondApi) Respond(w http.ResponseWriter) {
 	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(respond.respondCode)
 	json.NewEncoder(w).Encode(respond.ReturnHashMap())
 }

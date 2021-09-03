@@ -16,19 +16,19 @@ Listing functions is dev.
 package controllers
 
 import (
-	"net/http"
-	"rest-api/models"
+    "net/http"
+    "rest-api/models"
 
-	"github.com/gorilla/mux"
-	easysdk "github.com/personal-security/easy-sdk-go"
+    "github.com/gorilla/mux"
+    easysdk "github.com/personal-security/easy-sdk-go"
 )
 
 var StatusGetNow = func(w http.ResponseWriter, r *http.Request) {
     // CODE
 
-	resp := &easysdk.RespondApi{}
-	resp.Create(true, "Success")
-	resp.Respond(w)
+    resp := &easysdk.RespondApi{}
+    resp.Create(true, "Success")
+    resp.Respond(w)
 }
 ```
 
@@ -38,17 +38,17 @@ or
 package controllers
 
 import (
-	"net/http"
-	"rest-api/models"
+    "net/http"
+    "rest-api/models"
 
-	"github.com/gorilla/mux"
-	easysdk "github.com/personal-security/easy-sdk-go"
+    "github.com/gorilla/mux"
+    easysdk "github.com/personal-security/easy-sdk-go"
 )
 
 var StatusGetNow = func(w http.ResponseWriter, r *http.Request) {
     // CODE
 
-	easysdk.GenerateApiRespond(w,true,"Success",nil)
+    easysdk.GenerateApiRespond(w,true,"Success",nil)
 }
 ```
 
