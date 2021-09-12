@@ -21,6 +21,16 @@ func RandStringBytes(n int) string {
 	return string(b)
 }
 
+func RandStringBytesAllLower(n int) string {
+	const letterBytes = "abcdefghijklmnopqrstuvwxyz0123456789"
+
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return string(b)
+}
+
 func RandIntBytes(n int) string {
 	const letterBytes = "123456789"
 
