@@ -3,14 +3,65 @@ package easysdk
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"golang.org/x/net/proxy"
 )
+
+func GetRequestTimeout(url string, timeout int, token string) ([]byte, int, error) {
+	client := http.Client{
+		Timeout: time.Duration(timeout) * time.Second,
+	}
+	//resp, err := client.Get(url)
+
+	// Create a Bearer string by appending string access token
+	var bearer = "Bearer " + token
+
+	// Create a new request using http
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Println(err)
+		return nil, 0, err
+	}
+
+	if token != "" {
+		// add authorization header to the req
+		req.Header.Add("Authorization", bearer)
+	}
+
+	// Send req using http Client
+	resp, err := client.Do(req)
+
+	if err != nil {
+		log.Println(err)
+		return nil, 0, err
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Println(err)
+		return nil, 0, err
+	}
+
+	return body, resp.StatusCode, nil
+}
+
+func GetRequest(url string) ([]byte, int, error) {
+	return GetRequestTimeout(url, 2, "")
+}
+
+func GetRequestWithToken(url string, token string) ([]byte, int, error) {
+	return GetRequestTimeout(url, 2, token)
+}
 
 func SendGetTorRequest(url string) ([]byte, error) {
 	const PROXY_ADDR = torAddr
