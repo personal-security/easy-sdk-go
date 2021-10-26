@@ -6,7 +6,7 @@ A set of simple functions to make life easier.
 
 `go get -u "github.com/personal-security/easy-sdk-go"`
 
-## Finctions
+## Functions
 
 Listing functions is dev.
 
