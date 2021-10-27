@@ -3,6 +3,7 @@ package easysdk
 import (
 	"bytes"
 	"crypto/md5"
+	"encoding/base64"
 	"encoding/hex"
 	"io/ioutil"
 	"log"
@@ -110,6 +111,17 @@ func PgpDecryptMessage(text string, key string, pass string) (string, error) {
 }
 
 // RC4 Encryption
+
+// StringBase64Rc4 encrypt string with key
+func StringBase64Rc4(data string, keyString string) string {
+	key, _ := NewCipherRC4([]byte(keyString)) //initialize our cipher with the given key
+
+	buf := EncryptRC4([]byte(data), key)
+
+	base64String := base64.StdEncoding.EncodeToString(buf)
+
+	return string(base64String)
+}
 
 func EncryptRC4(data []byte, ciph *CipherRC4) []byte {
 	buffer := make([]byte, len(data))
