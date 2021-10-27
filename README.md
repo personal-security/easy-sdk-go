@@ -10,6 +10,8 @@ A set of simple functions to make life easier.
 
 Listing functions is dev.
 
+* MattermostSendMessage - Send message with hook to mattermost service
+
 ## Import
 
 ```GO
