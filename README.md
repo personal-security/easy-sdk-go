@@ -1,6 +1,6 @@
 # easy-sdk-go [![Build Status](https://travis-ci.com/personal-security/easy-sdk-go.svg?branch=main)](https://travis-ci.com/personal-security/easy-sdk-go)
 
-A set of simple functions to make life easier.
+This is a mini library that contains some functions that make our life easier. If you have something to add, make a pull request or write.
 
 ## Install
 
