@@ -11,6 +11,7 @@ This is a mini library that contains some functions that make our life easier. I
 Listing functions is dev.
 
 * MattermostSendMessage - Send message with hook to mattermost service
+* RunCMD - Run command in console and return resutl
 
 ## Import
 
