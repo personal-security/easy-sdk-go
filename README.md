@@ -12,6 +12,8 @@ Listing functions is dev.
 
 * MattermostSendMessage - Send message with hook to mattermost service
 * RunCMD - Run command in console and return resutl
+* SendGetTorRequest - Send GET query to server via TOR and get result
+* SendPostTorRequest - Send GET query to server via TOR and get result
 
 ## Import
 
