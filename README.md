@@ -16,6 +16,7 @@ Listing functions is dev.
 * SendPostTorRequest - Send GET query to server via TOR and get result
 * GetRequestTimeout - Send GET query with timaout and auth token
 * FileExists - Check exist file on file system
+* FileStringReplace - Replace string in current file
 
 ## Import
 
