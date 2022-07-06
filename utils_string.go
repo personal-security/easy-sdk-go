@@ -12,6 +12,7 @@ import (
 )
 
 func RandStringBytes(n int) string {
+	rand.Seed(time.Now().UnixNano())
 	const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 	b := make([]byte, n)
@@ -22,6 +23,7 @@ func RandStringBytes(n int) string {
 }
 
 func RandStringBytesAllLower(n int) string {
+	rand.Seed(time.Now().UnixNano())
 	const letterBytes = "abcdefghijklmnopqrstuvwxyz0123456789"
 
 	b := make([]byte, n)
@@ -32,6 +34,7 @@ func RandStringBytesAllLower(n int) string {
 }
 
 func RandIntBytes(n int) string {
+	rand.Seed(time.Now().UnixNano())
 	const letterBytes = "123456789"
 
 	b := make([]byte, n)

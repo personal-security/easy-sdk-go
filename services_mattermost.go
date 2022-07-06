@@ -3,24 +3,16 @@ package easysdk
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
-
-	"golang.org/x/net/proxy"
 )
 
-func MattermostSendMessage(url, hook, message string, isCode bool, warning bool) (string, error) {
-	const PROXY_ADDR = torAddr
-	var URL = "http://" + url + "/hooks/" + hook
+func MattermostSendMessage(url, hook, message string, isCode bool, warning bool, proxyModel *ProxyModel) (string, error) {
 
-	// create a socks5 dialer
-	dialer, err := proxy.SOCKS5("tcp", PROXY_ADDR, nil, proxy.Direct)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "can't connect to the proxy:", err)
-		return "", err
-	}
+	var URL = "http://" + url + "/hooks/" + hook
 
 	type SendPayload struct {
 		Text string `json:"text"`
@@ -46,10 +38,18 @@ func MattermostSendMessage(url, hook, message string, isCode bool, warning bool)
 	// setup a http client
 	httpTransport := &http.Transport{}
 	httpClient := &http.Client{Transport: httpTransport}
-	// set our socks5 as the dialer
-	httpTransport.Dial = dialer.Dial
-	// create a request
 
+	if proxyModel != nil {
+		proxyDial := GetProxyDial(proxyModel)
+		if proxyDial != nil {
+			httpTransport.Dial = proxyDial.Dial
+		} else {
+			return "", errors.New("no proxy dial")
+		}
+
+	}
+
+	// create a request
 	req, err := http.NewRequest("POST", URL, bytes.NewBuffer(jsonStr))
 	//req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
