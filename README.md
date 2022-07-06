@@ -1,6 +1,6 @@
 # easy-sdk-go [![Build Status](https://travis-ci.com/personal-security/easy-sdk-go.svg?branch=main)](https://travis-ci.com/personal-security/easy-sdk-go)
 
-A set of simple functions to make life easier.
+This is a mini library that contains some functions that make our life easier. If you have something to add, make a pull request or write.
 
 ## Install
 
@@ -11,6 +11,12 @@ A set of simple functions to make life easier.
 Listing functions is dev.
 
 * MattermostSendMessage - Send message with hook to mattermost service
+* RunCMD - Run command in console and return resutl
+* SendGetTorRequest - Send GET query to server via TOR and get result
+* SendPostTorRequest - Send GET query to server via TOR and get result
+* GetRequestTimeout - Send GET query with timaout and auth token
+* FileExists - Check exist file on file system
+* FileStringReplace - Replace string in current file
 
 ## Import
 
